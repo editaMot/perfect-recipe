@@ -69,7 +69,7 @@ const Bookmark = ({ recipeId, withText = false }: BookmarkProps) => {
       ) : (
         <BookmarkBorderOutlinedIcon fontSize="small" />
       )}
-      {withText && "Add To Favorite"}
+      {withText && bookmarked ? "Remove from Favorite" : "Add To Favorite"}
     </Button>
   );
 };
