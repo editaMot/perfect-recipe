@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
+import { RoutePages } from "./RoutePages";
 
 const Home = lazy(() => import("../pages/Home"));
 const Blog = lazy(() => import("../pages/Blog"));
@@ -14,15 +15,15 @@ const PageNotFound = lazy(() => import("../pages/PageNotFound"));
 const RoutesConfig = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="blog" element={<Blog />} />
-      <Route path="blog/:blogId" element={<BlogArticle />} />
-      <Route path="login" element={<Login />} />
-      <Route path="recipes" element={<Recipes />} />
-      <Route path="recipe/:recipeId" element={<Recipe />} />
-      <Route path="new-recipe" element={<NewRecipe />} />
-      <Route path="signup" element={<Signup />} />
-      <Route path="*" element={<PageNotFound />} />
+      <Route path={RoutePages.Home} element={<Home />} />
+      <Route path={RoutePages.Blog} element={<Blog />} />
+      <Route path={RoutePages.BlogArticle} element={<BlogArticle />} />
+      <Route path={RoutePages.Login} element={<Login />} />
+      <Route path={RoutePages.Recipes} element={<Recipes />} />
+      <Route path={RoutePages.Recipe} element={<Recipe />} />
+      <Route path={RoutePages.NewRecipe} element={<NewRecipe />} />
+      <Route path={RoutePages.Signup} element={<Signup />} />
+      <Route path={RoutePages.PageNotFound} element={<PageNotFound />} />
     </Routes>
   );
 };
