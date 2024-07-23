@@ -1,47 +1,45 @@
 import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { NavPages } from "../constants/NavPages";
-import { buildPath } from "../utils/pathBuilder";
+import { NAV_LINKS } from "../constants/NavLinks";
 
-type NavItemsProps = {
+interface NavItemsProps {
   activePath: string;
   variant: "mobile" | "desktop";
+}
+
+const DESKTOP_STYLES = {
+  margin: 1,
+};
+
+const MOBILE_STYLES = {
+  marginBottom: 1,
+  "&:hover": {
+    backgroundColor: "background.lightGrey",
+    borderRadius: 1,
+  },
+  padding: 1,
+  fontSize: "16px",
+  textAlign: "center",
 };
 
 const NavItems = ({ activePath, variant }: NavItemsProps) => {
   const navigate = useNavigate();
 
-  const desktopStyles = {
-    margin: 1,
-  };
-
-  const mobileStyles = {
-    marginBottom: 1,
-    "&:hover": {
-      backgroundColor: "background.lightGrey",
-      borderRadius: 1,
-    },
-    padding: 1,
-    fontSize: "16px",
-    textAlign: "center",
-  };
-
   return (
     <>
-      {Object.values(NavPages).map((page) => {
-        const path = buildPath(page);
-        const isActive = activePath === path;
+      {NAV_LINKS.map(({ title, routeLink }) => {
+        const isActive = activePath === routeLink;
         return (
           <Typography
-            key={page}
+            key={title}
             sx={{
               cursor: "pointer",
               color: isActive ? "primary.main" : "inherit",
-              ...(variant === "desktop" ? desktopStyles : mobileStyles),
+              ...(variant === "desktop" ? DESKTOP_STYLES : MOBILE_STYLES),
             }}
-            onClick={() => navigate(path)}
+            onClick={() => navigate(routeLink)}
           >
-            {page}
+            {title}
           </Typography>
         );
       })}
