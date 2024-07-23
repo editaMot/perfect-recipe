@@ -1,24 +1,29 @@
 import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
+import { RoutePages } from "./RoutePages";
 
 const Home = lazy(() => import("../pages/Home"));
 const Blog = lazy(() => import("../pages/Blog"));
+const BlogArticle = lazy(() => import("../pages/BlogArticle"));
 const Login = lazy(() => import("../pages/Login"));
 const NewRecipe = lazy(() => import("../pages/NewRecipe"));
 const Recipe = lazy(() => import("../pages/Recipe"));
+const Recipes = lazy(() => import("../pages/Recipes"));
 const Signup = lazy(() => import("../pages/Signup"));
 const PageNotFound = lazy(() => import("../pages/PageNotFound"));
 
 const RoutesConfig = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="blog" element={<Blog />} />
-      <Route path="login" element={<Login />} />
-      <Route path="recipe/:recipeId" element={<Recipe />} />
-      <Route path="new-recipe" element={<NewRecipe />} />
-      <Route path="signup" element={<Signup />} />
-      <Route path="*" element={<PageNotFound />} />
+      <Route path={RoutePages.Home} element={<Home />} />
+      <Route path={RoutePages.Blog} element={<Blog />} />
+      <Route path={RoutePages.BlogArticle} element={<BlogArticle />} />
+      <Route path={RoutePages.Login} element={<Login />} />
+      <Route path={RoutePages.Recipes} element={<Recipes />} />
+      <Route path={RoutePages.Recipe} element={<Recipe />} />
+      <Route path={RoutePages.NewRecipe} element={<NewRecipe />} />
+      <Route path={RoutePages.Signup} element={<Signup />} />
+      <Route path={RoutePages.PageNotFound} element={<PageNotFound />} />
     </Routes>
   );
 };
