@@ -5,7 +5,7 @@ import PinterestIcon from "@mui/icons-material/Pinterest";
 import XIcon from "@mui/icons-material/X";
 import { IconButton, Link } from "@mui/material";
 
-const SocialMedia = () => {
+const SocialMedia: React.FC = () => {
   const icons = [
     { component: FacebookIcon, name: "Facebook" },
     { component: InstagramIcon, name: "Instagram" },
