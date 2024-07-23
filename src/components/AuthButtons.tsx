@@ -1,10 +1,11 @@
 import { Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { RoutePages } from "../routes/RoutePages";
 
-type AuthButtonsProps = {
+interface AuthButtonsProps {
   flexDirection?: "row" | "column";
   hidden?: boolean;
-};
+}
 
 const AuthButtons = ({ flexDirection = "row", hidden }: AuthButtonsProps) => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const AuthButtons = ({ flexDirection = "row", hidden }: AuthButtonsProps) => {
       }}
     >
       <Button
-        onClick={() => navigate("/login")}
+        onClick={() => navigate(RoutePages.Login)}
         variant="contained"
         sx={{
           backgroundColor: "background.lightGrey",
@@ -30,7 +31,7 @@ const AuthButtons = ({ flexDirection = "row", hidden }: AuthButtonsProps) => {
         Login
       </Button>
       <Button
-        onClick={() => navigate("/signup")}
+        onClick={() => navigate(RoutePages.Signup)}
         variant="contained"
         sx={{
           backgroundColor: "primary.light",
