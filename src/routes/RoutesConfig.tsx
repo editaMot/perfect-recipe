@@ -10,6 +10,9 @@ const NewRecipe = lazy(() => import("../pages/NewRecipe"));
 const Recipe = lazy(() => import("../pages/Recipe"));
 const Recipes = lazy(() => import("../pages/Recipes"));
 const Signup = lazy(() => import("../pages/Signup"));
+const Contact = lazy(() => import("../pages/Contact"));
+const Terms = lazy(() => import("../pages/Terms"));
+const Privacy = lazy(() => import("../pages/Privacy"));
 const PageNotFound = lazy(() => import("../pages/PageNotFound"));
 
 const RoutesConfig = () => {
@@ -23,6 +26,9 @@ const RoutesConfig = () => {
       <Route path={RoutePages.Recipe} element={<Recipe />} />
       <Route path={RoutePages.NewRecipe} element={<NewRecipe />} />
       <Route path={RoutePages.Signup} element={<Signup />} />
+      <Route path={RoutePages.Contact} element={<Contact />} />
+      <Route path={RoutePages.Terms} element={<Terms />} />
+      <Route path={RoutePages.Privacy} element={<Privacy />} />
       <Route path={RoutePages.PageNotFound} element={<PageNotFound />} />
     </Routes>
   );
