@@ -1,11 +1,14 @@
 import { Box, Typography } from "@mui/material";
 
-type CategoryCardProps = {
+interface CategoryCardProps {
   categoryName: string;
   categoryImage: string;
-};
+}
 
-const CategoryCard = ({ categoryName, categoryImage }: CategoryCardProps) => {
+const CategoryCard: React.FC<CategoryCardProps> = ({
+  categoryName,
+  categoryImage,
+}) => {
   return (
     <Box
       sx={{
