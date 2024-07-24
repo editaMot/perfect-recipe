@@ -1,25 +1,28 @@
 import { Box, Card, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { RoutePages } from "../routes/RoutePages";
 
-type BlogCardProps = {
+interface BlogCardProps {
   blogId: string;
   createdAt: string;
   title: string;
   summary: string;
   image: string;
-};
+}
 
-const BlogCard = ({
+const BlogCard: React.FC<BlogCardProps> = ({
   blogId,
   createdAt,
   title,
   summary,
   image,
-}: BlogCardProps) => {
+}) => {
   const navigate = useNavigate();
   return (
     <Card
-      onClick={() => navigate(`/blog/${blogId}`)}
+      onClick={() =>
+        navigate(RoutePages.BlogArticle.replace(":blogId", blogId))
+      }
       sx={{
         cursor: "pointer",
       }}
