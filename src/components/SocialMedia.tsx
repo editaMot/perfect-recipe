@@ -3,7 +3,7 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import PinterestIcon from "@mui/icons-material/Pinterest";
 import XIcon from "@mui/icons-material/X";
-import { IconButton, Link } from "@mui/material";
+import { Box, IconButton, Link } from "@mui/material";
 
 const SocialMedia: React.FC = () => {
   const icons = [
@@ -15,7 +15,7 @@ const SocialMedia: React.FC = () => {
   ];
 
   return (
-    <>
+    <Box>
       {icons.map((icon) => {
         const IconComponent = icon.component;
         return (
@@ -30,7 +30,7 @@ const SocialMedia: React.FC = () => {
           </Link>
         );
       })}
-    </>
+    </Box>
   );
 };
 
