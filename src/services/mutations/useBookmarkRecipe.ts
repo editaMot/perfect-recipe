@@ -1,8 +1,20 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  MutateOptions,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { addDocument } from "../firestoreServices";
-import { BookmarkedRecipes } from "../../types/documentTypes";
+import { BookmarkedRecipes } from "../../types/documentTypes.tsx";
 
-export const useBookmarkRecipe = () => {
+interface UseBookmarkRecipeReturn {
+  isSaving: boolean;
+  bookmarkRecipe: (
+    newBookmarkedRecipe: BookmarkedRecipes,
+    options?: MutateOptions<string, Error, BookmarkedRecipes>
+  ) => void;
+}
+
+export const useBookmarkRecipe = (): UseBookmarkRecipeReturn => {
   const queryClient = useQueryClient();
 
   const { isPending: isSaving, mutate: bookmarkRecipe } = useMutation({

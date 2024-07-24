@@ -5,10 +5,10 @@ import { useState } from "react";
 import { useBookmarkRecipe } from "../services/mutations/useBookmarkRecipe";
 import { useDeleteBookmarkedRecipe } from "../services/mutations/useDeleteBookmarkedRecipe";
 
-type BookmarkProps = {
+interface BookmarkProps {
   withText?: boolean;
   recipeId: string;
-};
+}
 
 const withTextStyle = {
   gap: 0.5,
@@ -28,7 +28,7 @@ const withoutTextStyle = {
   },
 };
 
-const Bookmark = ({ recipeId, withText = false }: BookmarkProps) => {
+const Bookmark: React.FC<BookmarkProps> = ({ recipeId, withText = false }) => {
   const [bookmarked, setBookmarked] = useState<boolean>(false);
   const [bookmarkId, setBookmarkId] = useState<string>("");
   const { isSaving, bookmarkRecipe } = useBookmarkRecipe();
@@ -38,14 +38,16 @@ const Bookmark = ({ recipeId, withText = false }: BookmarkProps) => {
   const isAuthenticated = true;
   const userId = "UgmRjQ854xMU3ST8LiVv";
 
-  const handleClick = () => {
+  const handleClick = (): void => {
     if (bookmarked) {
       deleteBookmarkedRecipe(bookmarkId);
     } else {
       bookmarkRecipe(
         { userId, recipeId },
         {
-          onSuccess: (docId) => setBookmarkId(docId || ""),
+          onSuccess: (docId) => {
+            setBookmarkId(docId);
+          },
         }
       );
     }
@@ -54,7 +56,7 @@ const Bookmark = ({ recipeId, withText = false }: BookmarkProps) => {
 
   return (
     <Button
-      variant="outlined"
+      variant={withText ? "contained" : "outlined"}
       sx={{
         ...(withText ? withTextStyle : withoutTextStyle),
         "&.Mui-disabled": {
@@ -69,7 +71,7 @@ const Bookmark = ({ recipeId, withText = false }: BookmarkProps) => {
       ) : (
         <BookmarkBorderOutlinedIcon fontSize="small" />
       )}
-      {withText && bookmarked ? "Remove from Favorite" : "Add To Favorite"}
+      {withText && (bookmarked ? "Remove from favorite" : "Add to favorite")}
     </Button>
   );
 };

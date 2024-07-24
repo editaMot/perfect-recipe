@@ -1,19 +1,24 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteDocument } from "../firestoreServices";
 
-export const useDeleteBookmarkedRecipe = () => {
-  const queryClient = useQueryClient();
+interface UseDeleteBookmarkedRecipeReturn {
+  isDeleting: boolean;
+  deleteBookmarkedRecipe: (recipeId: string) => void;
+}
 
-  const { isPending: isDeleting, mutate: deleteBookmarkedRecipe } = useMutation(
-    {
-      mutationFn: (recipeId: string) =>
-        deleteDocument("bookmarkedRecipes", recipeId),
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["bookmarked-recipes"] });
-      },
-      onError: (error) => console.log(error),
-    }
-  );
+export const useDeleteBookmarkedRecipe =
+  (): UseDeleteBookmarkedRecipeReturn => {
+    const queryClient = useQueryClient();
 
-  return { isDeleting, deleteBookmarkedRecipe };
-};
+    const { isPending: isDeleting, mutate: deleteBookmarkedRecipe } =
+      useMutation({
+        mutationFn: (recipeId: string) =>
+          deleteDocument("bookmarkedRecipes", recipeId),
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["bookmarked-recipes"] });
+        },
+        onError: (error) => console.log(error),
+      });
+
+    return { isDeleting, deleteBookmarkedRecipe };
+  };
