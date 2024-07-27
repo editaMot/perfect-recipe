@@ -100,6 +100,8 @@ const Newsletter = ({
             width: {
               sm: `${footer || flexDirection === "column" ? "100%" : "70%"}`,
             },
+            backgroundColor: "background.default",
+            borderRadius: "8px",
             "& .MuiInputBase-input": {
               fontSize: "15px",
             },
