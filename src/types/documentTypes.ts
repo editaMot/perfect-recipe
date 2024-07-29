@@ -6,3 +6,13 @@ export interface BookmarkedRecipes {
 export interface Newsletter {
   email: string;
 }
+
+export interface RecipeRating {
+  recipeId: string;
+  rating: number;
+  userId: string;
+}
+
+export interface RatedRecipe extends RecipeRating {
+  id: string;
+}
