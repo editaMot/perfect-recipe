@@ -14,7 +14,7 @@ import AuthButtons from "./AuthButtons";
 import Logo from "./Logo";
 import NavItems from "./NavItems";
 
-const Header = () => {
+const Header: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [scrolled, setScrolled] = useState<boolean>(false);
   const location = useLocation();
@@ -23,15 +23,15 @@ const Header = () => {
     setOpen(newOpen);
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
+  const handleScroll = () => {
+    if (window.scrollY > 0) {
+      setScrolled(true);
+    } else {
+      setScrolled(false);
+    }
+  };
 
+  useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
