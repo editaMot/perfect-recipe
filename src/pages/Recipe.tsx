@@ -1,5 +1,3 @@
-const Recipe = () => {
-  return <main>Recipe</main>;
-};
+const Recipe = () => <>Recipe</>;
 
 export default Recipe;

@@ -1,5 +1,3 @@
-const BlogArticle = () => {
-  return <main>BlogArticle</main>;
-};
+const BlogArticle = () => <>BlogArticle</>;
 
 export default BlogArticle;

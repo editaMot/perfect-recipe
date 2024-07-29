@@ -1,5 +1,3 @@
-const Terms = () => {
-  return <main>Terms</main>;
-};
+const Terms = () => <>Terms</>;
 
 export default Terms;

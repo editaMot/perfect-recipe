@@ -1,5 +1,3 @@
-const Signup = () => {
-  return <main>Signup</main>;
-};
+const Signup = () => <>Signup</>;
 
 export default Signup;
