@@ -40,18 +40,21 @@ export const getDocuments = async (collectionName: string) => {
   }
 };
 
-export const getDocumentsByField = async (
+export const getDocumentsByField = async <T,>(
   collectionName: string,
   fieldName: string,
   fieldValue: string | number
-) => {
+): Promise<T[]> => {
   try {
     const q = query(
       collection(db, collectionName),
       where(fieldName, "==", fieldValue)
     );
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    return querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as T[];
   } catch (e) {
     console.error("Error getting documents by field", e);
     return [];

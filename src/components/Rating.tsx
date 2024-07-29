@@ -21,7 +21,6 @@ const Rating: React.FC<RatingProps> = ({
   ratingChangeHandler,
 }) => {
   const { ratedRecipe } = useRatedRecipe("recipeId", recipeId);
-
   const calculateAverageRating = (recipe: RatedRecipe[]): number => {
     if (!recipe || recipe.length === 0) return 0;
 
@@ -30,12 +29,12 @@ const Rating: React.FC<RatingProps> = ({
       0
     );
 
-    return totalRecipeRating / recipe.length;
+    const averageRating = totalRecipeRating / recipe.length;
+
+    return averageRating;
   };
 
-  const averageRating = ratedRecipe
-    ? calculateAverageRating(ratedRecipe as RatedRecipe[])
-    : 0;
+  const averageRating = ratedRecipe ? calculateAverageRating(ratedRecipe) : 0;
 
   return (
     <RatingStars
