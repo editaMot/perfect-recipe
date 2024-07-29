@@ -8,7 +8,7 @@ interface Links {
 
 interface FooterLinksGroupProps {
   groupTitle: string;
-  links: Array<Links>;
+  links: Links[];
 }
 
 const FooterLinksGroup: React.FC<FooterLinksGroupProps> = ({
