@@ -1,6 +1,7 @@
 import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import { RoutePages } from "./RoutePages";
+import Layout from "../components/Layout";
 
 const Home = lazy(() => import("../pages/Home"));
 const Blog = lazy(() => import("../pages/Blog"));
@@ -18,18 +19,20 @@ const PageNotFound = lazy(() => import("../pages/PageNotFound"));
 const RoutesConfig = () => {
   return (
     <Routes>
-      <Route path={RoutePages.Home} element={<Home />} />
-      <Route path={RoutePages.Blog} element={<Blog />} />
-      <Route path={RoutePages.BlogArticle} element={<BlogArticle />} />
-      <Route path={RoutePages.Login} element={<Login />} />
-      <Route path={RoutePages.Recipes} element={<Recipes />} />
-      <Route path={RoutePages.Recipe} element={<Recipe />} />
-      <Route path={RoutePages.NewRecipe} element={<NewRecipe />} />
-      <Route path={RoutePages.Signup} element={<Signup />} />
-      <Route path={RoutePages.Contact} element={<Contact />} />
-      <Route path={RoutePages.Terms} element={<Terms />} />
-      <Route path={RoutePages.Privacy} element={<Privacy />} />
-      <Route path={RoutePages.PageNotFound} element={<PageNotFound />} />
+      <Route element={<Layout />}>
+        <Route path={RoutePages.Home} element={<Home />} />
+        <Route path={RoutePages.Blog} element={<Blog />} />
+        <Route path={RoutePages.BlogArticle} element={<BlogArticle />} />
+        <Route path={RoutePages.Login} element={<Login />} />
+        <Route path={RoutePages.Recipes} element={<Recipes />} />
+        <Route path={RoutePages.Recipe} element={<Recipe />} />
+        <Route path={RoutePages.NewRecipe} element={<NewRecipe />} />
+        <Route path={RoutePages.Signup} element={<Signup />} />
+        <Route path={RoutePages.Contact} element={<Contact />} />
+        <Route path={RoutePages.Terms} element={<Terms />} />
+        <Route path={RoutePages.Privacy} element={<Privacy />} />
+        <Route path={RoutePages.PageNotFound} element={<PageNotFound />} />
+      </Route>
     </Routes>
   );
 };
