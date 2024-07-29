@@ -7,5 +7,8 @@ export enum RoutePages {
   Recipe = "/recipe/:recipeId",
   NewRecipe = "/new-recipe",
   Signup = "/signup",
+  Contact = "/contact",
+  Terms = "/terms",
+  Privacy = "/privacy",
   PageNotFound = "*",
 }

@@ -48,7 +48,7 @@ const Newsletter = ({
         textAlign: "center",
         gap: {
           xs: 2,
-          sm: 3,
+          sm: `${!footer ? 2 : 3}`,
         },
       }}
     >
