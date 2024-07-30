@@ -25,12 +25,15 @@ const BlogCard: React.FC<BlogCardProps> = ({
       }
       sx={{
         cursor: "pointer",
+        borderColor: "secondary.light",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
       }}
     >
       <Box
         sx={{
-          width: "100%",
-          height: { xs: 200, sm: 250, md: 300 },
+          aspectRatio: { xs: 5 / 3, sm: 6 / 4 },
           backgroundImage: `url(${image})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
