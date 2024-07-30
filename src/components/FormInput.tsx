@@ -1,11 +1,14 @@
 import { Box, InputLabel, TextField } from "@mui/material";
-import { useState } from "react";
-import {
-  Control,
-  Controller,
-  FieldValues,
-  RegisterOptions,
-} from "react-hook-form";
+import { Control, Controller, FieldValues } from "react-hook-form";
+import HelperText from "./HelperText";
+
+export interface ValidationRules {
+  required?: boolean | string;
+  maxLength?: { value: number; message: string };
+  minLength?: { value: number; message: string };
+  pattern?: { value: RegExp; message: string };
+  validate?: (value: string | number) => boolean | string;
+}
 
 interface FormInputProps {
   type?: string;
@@ -14,7 +17,7 @@ interface FormInputProps {
   label?: string;
   defaultValue: string | number;
   placeholder?: string;
-  rules?: RegisterOptions;
+  rules?: ValidationRules;
   maxLength?: number;
   additionalInfo?: string;
 }
@@ -29,28 +32,26 @@ const FormInput: React.FC<FormInputProps> = ({
   placeholder,
   maxLength,
   additionalInfo,
-}) => {
-  const [inputLength, setInputLength] = useState<number>(
-    (defaultValue || "").toString().length
-  );
-  return (
-    <Box sx={{ width: "100%" }}>
-      <InputLabel
-        htmlFor={name}
-        sx={{
-          mb: 1,
-          color: "#000",
-          fontSize: { xs: "18px", sm: "20px", md: "22px", lg: "24px" },
-        }}
-      >
-        {label}
-      </InputLabel>
-      <Controller
-        name={name}
-        control={control}
-        defaultValue={defaultValue}
-        rules={rules}
-        render={({ field, fieldState: { error } }) => (
+}) => (
+  <Box sx={{ width: "100%" }}>
+    <InputLabel
+      htmlFor={name}
+      sx={{
+        mb: 1,
+        color: "#000",
+        fontSize: { xs: "18px", sm: "20px", md: "22px", lg: "24px" },
+      }}
+    >
+      {label}
+    </InputLabel>
+    <Controller
+      name={name}
+      control={control}
+      defaultValue={defaultValue}
+      rules={rules}
+      render={({ field, fieldState: { error } }) => {
+        const currentInputLength = (field.value || "").toString().length;
+        return (
           <TextField
             {...field}
             type={type}
@@ -59,18 +60,12 @@ const FormInput: React.FC<FormInputProps> = ({
             error={!!error}
             multiline
             helperText={
-              <>
-                {error ? error.message : ""}
-                {maxLength && !error && ` ${inputLength}/${maxLength}`}
-                {additionalInfo && !error && (
-                  <Box
-                    component="span"
-                    sx={{ mt: 1, color: "secondary.light", fontSize: "12px" }}
-                  >
-                    {additionalInfo}
-                  </Box>
-                )}
-              </>
+              <HelperText
+                error={error}
+                maxLength={maxLength}
+                inputLength={currentInputLength}
+                additionalInfo={additionalInfo}
+              />
             }
             placeholder={placeholder}
             inputProps={{
@@ -79,15 +74,14 @@ const FormInput: React.FC<FormInputProps> = ({
               max: type === "number" ? 59 : undefined,
             }}
             onChange={(e) => {
-              setInputLength(e.target.value.length);
               field.onChange(e);
             }}
             value={field.value || ""}
           />
-        )}
-      />
-    </Box>
-  );
-};
+        );
+      }}
+    />
+  </Box>
+);
 
 export default FormInput;
