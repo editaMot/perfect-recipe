@@ -1,5 +1,3 @@
-const Privacy = () => {
-  return <main>Privacy</main>;
-};
+const Privacy = () => <>Privacy</>;
 
 export default Privacy;

@@ -49,7 +49,7 @@ const Header: React.FC = () => {
         transition: "box-shadow 0.3s",
       }}
     >
-      <Container>
+      <Container sx={{ px: { xl: 0 } }}>
         <Toolbar
           disableGutters
           sx={{
