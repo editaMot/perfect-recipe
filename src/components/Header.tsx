@@ -40,7 +40,7 @@ const Header: React.FC = () => {
 
   return (
     <AppBar
-      position="sticky"
+      position="fixed"
       sx={{
         backgroundColor: scrolled ? "background.default" : "transparent",
         color: "secondary.dark",
