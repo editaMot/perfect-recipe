@@ -3,14 +3,15 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   query,
   where,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import {
-  Newsletter,
   BookmarkedRecipes,
+  Newsletter,
   RecipeRating,
 } from "../types/documentTypes";
 
@@ -37,6 +38,26 @@ export const getDocuments = async (collectionName: string) => {
   } catch (e) {
     console.error("Error getting documents: ", e);
     return [];
+  }
+};
+
+export const getDocumentById = async <T,>(
+  collectionName: string,
+  documentId: string
+): Promise<T | null> => {
+  try {
+    const docRef = doc(db, collectionName, documentId);
+    const docSnapshot = await getDoc(docRef);
+    if (docSnapshot.exists()) {
+      return {
+        id: docSnapshot.id,
+        ...docSnapshot.data(),
+      } as T;
+    } else {
+      throw new Error("Error getting document by ID");
+    }
+  } catch (e) {
+    throw new Error("Error getting document by ID");
   }
 };
 
