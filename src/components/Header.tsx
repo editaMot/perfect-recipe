@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import AuthButtons from "./AuthButtons";
+import AuthButtons from "./Buttons/AuthButtons";
 import Logo from "./Logo";
 import NavItems from "./NavItems";
 
