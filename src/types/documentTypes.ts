@@ -16,3 +16,16 @@ export interface RecipeRating {
 export interface RatedRecipe extends RecipeRating {
   id: string;
 }
+
+export interface NutritionInformation {
+  calories: number;
+  protein: number;
+  fat: number;
+  carbohydrates: number;
+  fiber: number;
+  cholesterol: number;
+  sodium: number;
+  calcium: number;
+  iron: number;
+  potassium: number;
+}
