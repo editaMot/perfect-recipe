@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Suspense } from "react";
 import { BrowserRouter } from "react-router-dom";
+import ToasterConfig from "./configs/ToasterConfig";
 import RoutesConfig from "./routes/RoutesConfig";
 
 const queryClient = new QueryClient();
@@ -15,6 +16,7 @@ function App() {
           <RoutesConfig />
         </BrowserRouter>
       </Suspense>
+      <ToasterConfig />
     </QueryClientProvider>
   );
 }
