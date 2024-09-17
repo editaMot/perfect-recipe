@@ -3,14 +3,17 @@ import {
   collection,
   deleteDoc,
   doc,
+  getCountFromServer,
   getDocs,
+  limit,
   query,
+  startAfter,
   where,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import {
-  Newsletter,
   BookmarkedRecipes,
+  Newsletter,
   RecipeRating,
 } from "../types/documentTypes";
 
@@ -30,13 +33,51 @@ export const addDocument = async (
   }
 };
 
-export const getDocuments = async (collectionName: string) => {
+export const getDocuments = async <T,>(
+  collectionName: string,
+  pageSize: number,
+  currentPage: number
+): Promise<{ data: T[]; totalDocs: number }> => {
   try {
-    const querySnapshot = await getDocs(collection(db, collectionName));
-    return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const collectionRef = collection(db, collectionName);
+
+    const totalCountSnapshot = await getCountFromServer(collectionRef);
+    const totalDocs = totalCountSnapshot.data().count;
+
+    const docsQuery = query(collectionRef, limit(pageSize));
+
+    let querySnapshot;
+    if (currentPage > 1) {
+      const previousPageQuery = query(
+        collectionRef,
+        limit((currentPage - 1) * pageSize)
+      );
+      const previousPageSnapshot = await getDocs(previousPageQuery);
+      const lastVisibleDoc =
+        previousPageSnapshot.docs[previousPageSnapshot.docs.length - 1];
+
+      if (lastVisibleDoc) {
+        const nextQuery = query(
+          collectionRef,
+          startAfter(lastVisibleDoc),
+          limit(pageSize)
+        );
+        querySnapshot = await getDocs(nextQuery);
+      } else {
+        throw new Error("No previous document found for pagination");
+      }
+    } else {
+      querySnapshot = await getDocs(docsQuery);
+    }
+
+    const data = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as T),
+    }));
+
+    return { data, totalDocs };
   } catch (e) {
-    console.error("Error getting documents: ", e);
-    return [];
+    throw new Error("Error fetching documents");
   }
 };
 
