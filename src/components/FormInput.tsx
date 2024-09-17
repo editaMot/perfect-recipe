@@ -1,23 +1,20 @@
 import { Box, InputLabel, TextField } from "@mui/material";
-import { Control, Controller, FieldValues } from "react-hook-form";
+import { Control, Controller } from "react-hook-form";
+import {
+  RecipeFormData,
+  RecipeFormFieldNames,
+} from "../types/recipeFormDataTypes";
+import { ValidationRules } from "../types/recipeFormValidationRulesTypes";
 import HelperText from "./HelperText";
-
-export interface ValidationRules {
-  required?: boolean | string;
-  maxLength?: { value: number; message: string };
-  minLength?: { value: number; message: string };
-  pattern?: { value: RegExp; message: string };
-  validate?: (value: string | number) => boolean | string;
-}
 
 interface FormInputProps {
   type?: string;
-  name: string;
-  control: Control<FieldValues>;
+  name: RecipeFormFieldNames;
+  control: Control<RecipeFormData>;
   label?: string;
   defaultValue: string | number;
   placeholder?: string;
-  rules?: ValidationRules;
+  rules?: ValidationRules<string | number>;
   maxLength?: number;
   additionalInfo?: string;
 }
