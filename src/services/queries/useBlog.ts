@@ -5,7 +5,7 @@ import { getDocumentById } from "../firestoreServices";
 
 interface UseBlogReturn {
   isLoading: boolean;
-  blog: Blog | undefined;
+  blog?: Blog;
   error: string | null;
 }
 
