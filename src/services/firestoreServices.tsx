@@ -3,6 +3,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getCountFromServer,
   getDocs,
   limit,
@@ -78,6 +79,26 @@ export const getDocuments = async <T,>(
     return { data, totalDocs };
   } catch (e) {
     throw new Error("Error fetching documents");
+  }
+};
+
+export const getDocumentById = async <T,>(
+  collectionName: string,
+  documentId: string
+): Promise<T | null> => {
+  try {
+    const docRef = doc(db, collectionName, documentId);
+    const docSnapshot = await getDoc(docRef);
+    if (docSnapshot.exists()) {
+      return {
+        id: docSnapshot.id,
+        ...docSnapshot.data(),
+      } as T;
+    } else {
+      throw new Error("Error getting document by ID");
+    }
+  } catch (e) {
+    throw new Error("Error getting document by ID");
   }
 };
 
