@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { RoutePages } from "../../routes/RoutePages";
-import AuthButtons from "../AuthButtons";
+import AuthButtons from "../Buttons/AuthButtons";
 
 const HeroContent: React.FC = () => {
   const navigate = useNavigate();
