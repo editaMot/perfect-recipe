@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { RoutePages } from "../routes/RoutePages";
+import { RoutePages } from "../../routes/RoutePages";
 
 interface AuthButtonsProps {
   flexDirection?: "row" | "column";
