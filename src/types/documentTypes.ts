@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface BookmarkedRecipes {
   userId: string;
   recipeId: string;
@@ -41,3 +43,12 @@ export type nutrientsType =
   | "calcium"
   | "iron"
   | "calories";
+
+export interface Blog {
+  id: string;
+  title: string;
+  image: string;
+  createdAt: Timestamp;
+  summary: string;
+  fullArticle: string;
+}
