@@ -5,7 +5,7 @@ import { getDocumentById } from "../firestoreServices";
 
 interface UseRecipeReturn {
   isLoading: boolean;
-  recipe: Recipe | undefined;
+  recipe?: Recipe;
   error: string | null;
 }
 
