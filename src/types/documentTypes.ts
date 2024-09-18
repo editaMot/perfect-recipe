@@ -19,6 +19,31 @@ export interface RatedRecipe extends RecipeRating {
   id: string;
 }
 
+export interface NutritionInformation {
+  calories: number;
+  protein: number;
+  fat: number;
+  carbohydrates: number;
+  fiber: number;
+  cholesterol: number;
+  sodium: number;
+  calcium: number;
+  iron: number;
+  potassium: number;
+}
+
+export type nutrientsType =
+  | "fat"
+  | "carbohydrates"
+  | "fiber"
+  | "protein"
+  | "cholesterol"
+  | "sodium"
+  | "potassium"
+  | "calcium"
+  | "iron"
+  | "calories";
+
 export interface Blog {
   id: string;
   title: string;
