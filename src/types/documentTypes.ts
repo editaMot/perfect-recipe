@@ -29,3 +29,15 @@ export interface NutritionInformation {
   iron: number;
   potassium: number;
 }
+
+export type nutrientsType =
+  | "fat"
+  | "carbohydrates"
+  | "fiber"
+  | "protein"
+  | "cholesterol"
+  | "sodium"
+  | "potassium"
+  | "calcium"
+  | "iron"
+  | "calories";

@@ -1,8 +1,12 @@
 import { Box, List, ListItem, ListItemText, Typography } from "@mui/material";
-import { NutritionInformation as NutritionInformationTypes } from "../types/documentTypes";
+import {
+  nutrientsType,
+  NutritionInformation as NutritionInformationTypes,
+} from "../types/documentTypes";
+import { capitalizeText } from "../utils/capitalizeText";
 import { getNutrientUnit } from "../utils/getNutrientUnit";
 
-const nutrientOrder = [
+const nutrientOrder: nutrientsType[] = [
   "calories",
   "carbohydrates",
   "protein",
@@ -32,9 +36,7 @@ const NutritionInformation: React.FC<NutritionInformationProps> = ({
           nutritionInformation[key as keyof NutritionInformationTypes];
         return value !== undefined ? (
           <ListItem key={index} divider disableGutters>
-            <ListItemText
-              primary={key.charAt(0).toUpperCase() + key.slice(1)}
-            />
+            <ListItemText primary={capitalizeText(key)} />
             <Typography>
               {value} {getNutrientUnit(key)}
             </Typography>
