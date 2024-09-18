@@ -1,16 +1,21 @@
 import { Box, InputLabel } from "@mui/material";
-import { Control, FieldValues } from "react-hook-form";
-import FormInput, { ValidationRules } from "./FormInput";
+import { Control } from "react-hook-form";
+import { RecipeFormData } from "../types/recipeFormDataTypes";
+import { ValidationRules } from "../types/recipeFormValidationRulesTypes";
+import FormInput from "./FormInput";
 
 interface TimeInputProps {
-  name: { hoursName: string; minutesName: string };
+  name: {
+    hoursName: `cookingTime.hours` | `prepTime.hours`;
+    minutesName: `cookingTime.minutes` | `prepTime.minutes`;
+  };
   label: string;
   additionalInfo?: string;
-  control: Control<FieldValues>;
+  control: Control<RecipeFormData>;
   defaultValues: { hours: number; minutes: number };
   rules?: {
-    hours?: ValidationRules;
-    minutes?: ValidationRules;
+    hours?: ValidationRules<string | number>;
+    minutes?: ValidationRules<string | number>;
   };
 }
 
