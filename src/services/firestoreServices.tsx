@@ -3,34 +3,66 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getCountFromServer,
+  getDoc,
   getDocs,
   limit,
   query,
   startAfter,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import {
   BookmarkedRecipes,
+  NewComment,
   Newsletter,
   RecipeRating,
 } from "../types/documentTypes";
 
-type DocumentData = Newsletter | BookmarkedRecipes | RecipeRating;
+type DocumentData = Newsletter | BookmarkedRecipes | RecipeRating | NewComment;
+type FirestoreFieldValue =
+  | string
+  | number
+  | boolean
+  | Date
+  | null
+  | Array<unknown>
+  | Record<string, unknown>;
+
+export interface CategoryWithImage {
+  name: string;
+  imageUrl: string;
+}
 
 export const addDocument = async (
   collectionName: string,
-  data: DocumentData
+  data: DocumentData,
+  docPath?: string
 ): Promise<string> => {
   try {
-    const docRef = await addDoc(collection(db, collectionName), data);
+    let collectionRef;
+
+    if (docPath) {
+      const segments = docPath.split("/");
+
+      if (segments.length % 2 !== 0) {
+        throw new Error(
+          "Invalid document path: must have an even number of segments (alternating collection/document)."
+        );
+      }
+      const parentDocRef = doc(db, ...segments);
+      collectionRef = collection(parentDocRef, collectionName);
+    } else {
+      collectionRef = collection(db, collectionName);
+    }
+
+    const docRef = await addDoc(collectionRef, data);
     console.log("Document written with ID: ", docRef.id);
     return docRef.id;
-  } catch (e) {
-    console.error("Error adding document: ", e);
-    throw new Error("Error adding document");
+  } catch (error) {
+    console.error("Error adding document:", error);
+    throw new Error("Error adding document: " + error);
   }
 };
 
@@ -130,5 +162,18 @@ export const deleteDocument = async (collectionName: string, docId: string) => {
     console.log("Document deleted with ID: ", docId);
   } catch (e) {
     console.error("Error deleting document: ", e);
+  }
+};
+
+export const updateDocumentField = async (
+  collectionPath: string,
+  docId: string,
+  updatedFields: Record<string, FirestoreFieldValue>
+) => {
+  try {
+    const documentRef = doc(db, `${collectionPath}`, docId);
+    await updateDoc(documentRef, updatedFields);
+  } catch (error) {
+    throw new Error("Error updating document fields");
   }
 };
