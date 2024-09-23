@@ -1,11 +1,11 @@
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import { Box, Divider, Typography } from "@mui/material";
-import { User as UserType } from "../types/UserTypes";
-import { formatDate } from "../utils/formatDate";
-import Bookmark from "./Bookmark";
-import ShareButton from "./Buttons/ShareButton";
-import Rating from "./Rating";
-import User from "./User";
+import { User as UserType } from "../../types/UserTypes";
+import { formatDate } from "../../utils/formatDate";
+import Bookmark from "../Bookmark";
+import ShareButton from "../Buttons/ShareButton";
+import Rating from "../Rating";
+import User from "../User";
 
 interface RecipeHeaderProps {
   author: UserType;
