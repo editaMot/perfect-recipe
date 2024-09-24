@@ -1,7 +1,7 @@
 import { Box, Divider, Typography } from "@mui/material";
-import { Time as TimeType } from "../types/documentTypes";
-import PrintButton from "./Buttons/PrintButton";
-import Time from "./Time";
+import { Time as TimeType } from "../../types/documentTypes";
+import PrintButton from "../Buttons/PrintButton";
+import Time from "../Time";
 
 interface RecipeInfoProps {
   cookTime: TimeType;

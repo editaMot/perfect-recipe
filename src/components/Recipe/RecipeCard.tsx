@@ -1,11 +1,12 @@
+import React from "react";
 import { Box, Card, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { RoutePages } from "../routes/RoutePages";
-import { User as UserType } from "../types/UserTypes";
-import Bookmark from "./Bookmark";
-import Calories from "./Calories";
-import Rating from "./Rating";
-import User from "./User";
+import { RoutePages } from "../../routes/RoutePages";
+import { User as UserType } from "../../types/UserTypes";
+import Bookmark from "../Bookmark";
+import Calories from "../Calories";
+import Rating from "../Rating";
+import User from "../User";
 
 interface RecipeCardProps {
   recipeId: string;
