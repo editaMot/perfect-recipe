@@ -1,3 +1,4 @@
+import { Image } from "../components/ImageInput/ImageInput";
 import { RecipeFormData } from "../types/recipeFormDataTypes";
 
 export const emailPattern = {
@@ -13,8 +14,9 @@ export const recipeFormValidationPattern = {
       message: "Title cannot exceed 50 characters",
     },
   },
-  image: {
-    required: "Image URL is required",
+  images: {
+    validate: (value: Image[]) =>
+      value.length > 0 || "At least one image is required",
   },
   description: {
     required: "Description is required",
@@ -27,27 +29,66 @@ export const recipeFormValidationPattern = {
     validate: (value: RecipeFormData["ingredients"]) =>
       value.length > 0 || "At least one ingredient is required",
   },
+  instructions: {
+    validate: (value: RecipeFormData["instructions"]) =>
+      value.length > 0 || "At least one step is required",
+  },
   servings: {
     required: "Number of servings is required",
     min: {
       value: 1,
-      message: "Serving is required",
+      message: "Serving should be at least 1",
+    },
+    validate: (value: string | number | unknown) => {
+      if (typeof value !== "number" && typeof value !== "string") {
+        return true;
+      }
+      const numberValue = Number(value);
+      if (isNaN(numberValue)) return "Serving must be a number";
+      return true;
     },
   },
-  cookingTime: {
-    hours: {
-      validate: (value: number) => value >= 0 || "Hours must be 0 or greater",
+  hours: {
+    required: "Hours are required",
+    min: {
+      value: 0,
+      message: "Hours cannot be negative",
     },
-    minutes: {
-      validate: (value: number) => value >= 0 || "Minutes must be 0 or greater",
+    validate: (value: string | number | unknown) => {
+      if (typeof value !== "number" && typeof value !== "string") {
+        return true;
+      }
+      const numberValue = Number(value);
+      if (isNaN(numberValue)) return "Hours must be a number";
+      if (numberValue < 0) return "Hours cannot be negative";
+      return true;
     },
   },
-  prepTime: {
-    hours: {
-      validate: (value: number) => value >= 0 || "Hours must be 0 or greater",
+  minutes: {
+    required: "Minutes are required",
+    min: {
+      value: 0,
+      message: "Minutes cannot be negative",
     },
-    minutes: {
-      validate: (value: number) => value >= 0 || "Minutes must be 0 or greater",
+    max: {
+      value: 59,
+      message: "Minutes must be between 0 and 59",
     },
+    validate: (value: string | number | unknown) => {
+      if (typeof value !== "number" && typeof value !== "string") {
+        return true;
+      }
+      const numberValue = Number(value);
+      if (isNaN(numberValue)) return "Minutes must be a number";
+      if (numberValue < 0 || numberValue > 59)
+        return "Minutes must be between 0 and 59";
+      return true;
+    },
+  },
+  cuisine: {
+    required: "Cuisine is required",
+  },
+  categories: {
+    required: "At least one category is required",
   },
 };
