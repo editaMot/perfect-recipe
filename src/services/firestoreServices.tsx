@@ -3,14 +3,15 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getCountFromServer,
+  getDoc,
   getDocs,
   limit,
   query,
   startAfter,
   where,
 } from "firebase/firestore";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { db } from "../firebaseConfig";
 import {
   BookmarkedRecipes,
@@ -131,4 +132,14 @@ export const deleteDocument = async (collectionName: string, docId: string) => {
   } catch (e) {
     console.error("Error deleting document: ", e);
   }
+};
+
+export const uploadImageToStorage = async (file: File): Promise<string> => {
+  const storage = getStorage();
+  const storageRef = ref(storage, `images/${file.name}-${Date.now()}`);
+
+  await uploadBytes(storageRef, file);
+
+  const downloadUrl = await getDownloadURL(storageRef);
+  return downloadUrl;
 };
