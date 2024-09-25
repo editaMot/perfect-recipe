@@ -14,23 +14,41 @@ import {
 import { db } from "../firebaseConfig";
 import {
   BookmarkedRecipes,
+  NewRecipe,
   Newsletter,
   RecipeRating,
 } from "../types/documentTypes";
 
-type DocumentData = Newsletter | BookmarkedRecipes | RecipeRating;
+type DocumentData = Newsletter | BookmarkedRecipes | RecipeRating | NewRecipe;
 
 export const addDocument = async (
   collectionName: string,
-  data: DocumentData
+  data: DocumentData,
+  docPath?: string
 ): Promise<string> => {
   try {
-    const docRef = await addDoc(collection(db, collectionName), data);
+    let collectionRef;
+
+    if (docPath) {
+      const segments = docPath.split("/");
+
+      if (segments.length % 2 !== 0) {
+        throw new Error(
+          "Invalid document path: must have an even number of segments (alternating collection/document)."
+        );
+      }
+      const parentDocRef = doc(db, ...segments);
+      collectionRef = collection(parentDocRef, collectionName);
+    } else {
+      collectionRef = collection(db, collectionName);
+    }
+
+    const docRef = await addDoc(collectionRef, data);
     console.log("Document written with ID: ", docRef.id);
     return docRef.id;
-  } catch (e) {
-    console.error("Error adding document: ", e);
-    throw new Error("Error adding document");
+  } catch (error) {
+    console.error("Error adding document:", error);
+    throw new Error("Error adding document: " + error);
   }
 };
 
