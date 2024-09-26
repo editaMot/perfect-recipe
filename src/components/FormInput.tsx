@@ -12,9 +12,9 @@ interface FormInputProps {
   name: RecipeFormFieldNames;
   control: Control<RecipeFormData>;
   label?: string;
-  defaultValue: string | number;
+  defaultValue?: string | number;
   placeholder?: string;
-  rules?: ValidationRules<string | number>;
+  rules: ValidationRules;
   maxLength?: number;
   additionalInfo?: string;
 }
