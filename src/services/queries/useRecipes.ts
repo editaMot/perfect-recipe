@@ -5,25 +5,35 @@ import { getDocuments } from "../firestoreServices";
 interface UseRecipesReturn {
   isLoading: boolean;
   error: string | null;
-  recipes: Recipe[] | undefined;
+  recipes?: Recipe[];
   totalPages: number;
   totalDocs: number;
 }
 
 export const useRecipes = (
-  pageSize: number,
-  currentPage: number
+  pageSize: number | null,
+  currentPage: number,
+  fieldName: string,
+  selectedTags: string[]
 ): UseRecipesReturn => {
   const {
     isLoading,
     data: response,
     error,
   } = useQuery({
-    queryKey: ["recipes", currentPage],
-    queryFn: () => getDocuments<Recipe>("recipes", pageSize, currentPage),
+    queryKey: ["recipes", currentPage, fieldName, selectedTags, pageSize],
+    queryFn: () =>
+      getDocuments<Recipe>(
+        "recipes",
+        pageSize,
+        currentPage,
+        fieldName,
+        selectedTags
+      ),
   });
 
-  const totalPages = response ? Math.ceil(response?.totalDocs / pageSize) : 0;
+  const totalPages =
+    response && pageSize ? Math.ceil(response.totalDocs / pageSize) : 1;
 
   return {
     isLoading,

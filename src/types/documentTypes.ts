@@ -1,9 +1,13 @@
 import { Timestamp } from "firebase/firestore";
 import { User } from "./UserTypes";
 
-export interface BookmarkedRecipes {
+export interface BookmarkRecipe {
   userId: string;
   recipeId: string;
+}
+
+export interface BookmarkedRecipe extends BookmarkRecipe {
+  id: string;
 }
 
 export interface Newsletter {

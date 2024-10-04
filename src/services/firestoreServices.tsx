@@ -3,8 +3,8 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getCountFromServer,
+  getDoc,
   getDocs,
   limit,
   query,
@@ -13,12 +13,12 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import {
-  BookmarkedRecipes,
+  BookmarkRecipe,
   Newsletter,
   RecipeRating,
 } from "../types/documentTypes";
 
-type DocumentData = Newsletter | BookmarkedRecipes | RecipeRating;
+type DocumentData = Newsletter | BookmarkRecipe | RecipeRating;
 
 export const addDocument = async (
   collectionName: string,
@@ -36,21 +36,49 @@ export const addDocument = async (
 
 export const getDocuments = async <T,>(
   collectionName: string,
-  pageSize: number,
-  currentPage: number
+  pageSize: number | null = 10,
+  currentPage: number = 1,
+  fieldName: string = "",
+  selectedTags: string[] = []
 ): Promise<{ data: T[]; totalDocs: number }> => {
   try {
     const collectionRef = collection(db, collectionName);
 
-    const totalCountSnapshot = await getCountFromServer(collectionRef);
+    let countQuery;
+    if (selectedTags.length > 0) {
+      countQuery = query(
+        collectionRef,
+        where(fieldName, "array-contains-any", selectedTags)
+      );
+    } else {
+      countQuery = collectionRef;
+    }
+
+    const totalCountSnapshot = await getCountFromServer(countQuery);
     const totalDocs = totalCountSnapshot.data().count;
 
-    const docsQuery = query(collectionRef, limit(pageSize));
+    let docsQuery;
+    if (pageSize) {
+      if (selectedTags.length > 0) {
+        docsQuery = query(
+          collectionRef,
+          where(fieldName, "array-contains-any", selectedTags),
+          limit(pageSize)
+        );
+      } else {
+        docsQuery = query(collectionRef, limit(pageSize));
+      }
+    } else {
+      docsQuery = query(collectionRef);
+    }
 
     let querySnapshot;
-    if (currentPage > 1) {
+    if (currentPage > 1 && pageSize) {
       const previousPageQuery = query(
         collectionRef,
+        ...(selectedTags.length > 0
+          ? [where(fieldName, "array-contains-any", selectedTags)]
+          : []),
         limit((currentPage - 1) * pageSize)
       );
       const previousPageSnapshot = await getDocs(previousPageQuery);
@@ -60,6 +88,9 @@ export const getDocuments = async <T,>(
       if (lastVisibleDoc) {
         const nextQuery = query(
           collectionRef,
+          ...(selectedTags.length > 0
+            ? [where(fieldName, "array-contains-any", selectedTags)]
+            : []),
           startAfter(lastVisibleDoc),
           limit(pageSize)
         );
@@ -77,7 +108,7 @@ export const getDocuments = async <T,>(
     }));
 
     return { data, totalDocs };
-  } catch (e) {
+  } catch {
     throw new Error("Error fetching documents");
   }
 };
