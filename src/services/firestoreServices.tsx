@@ -126,8 +126,8 @@ export const getUniqueCategories = async (
 
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      const categories = data["categories"] || [];
-      const imageUrl = data.image || "";
+      const categories = data["categories"] ?? [];
+      const imageUrl = data?.image ?? "";
 
       categories.forEach((category: string) => {
         if (!categoryImagesMap.has(category)) {

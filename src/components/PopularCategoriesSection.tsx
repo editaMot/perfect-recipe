@@ -16,15 +16,16 @@ const PopularCategoriesSection: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
 
+  const fetchCategories = async () => {
+    try {
+      const categories = await getUniqueCategories("recipes");
+      setCategories(categories);
+    } catch (e) {
+      throw new Error("Failed to fetch categories");
+    }
+  };
+
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const categories = await getUniqueCategories("recipes");
-        setCategories(categories);
-      } catch (e) {
-        throw new Error("Failed to fetch categories");
-      }
-    };
     fetchCategories();
   }, []);
 
