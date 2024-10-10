@@ -5,6 +5,7 @@ import {
   doc,
   getCountFromServer,
   getDoc,
+  getDoc,
   getDocs,
   limit,
   query,
@@ -18,8 +19,15 @@ import {
   NewComment,
   Newsletter,
   RecipeRating,
+  Comment,
 } from "../types/documentTypes";
 
+type DocumentData = Newsletter | BookmarkedRecipes | RecipeRating;
+
+export interface CategoryWithImage {
+  name: string;
+  imageUrl: string;
+}
 type DocumentData = Newsletter | BookmarkedRecipes | RecipeRating | NewComment;
 type FirestoreFieldValue =
   | string
@@ -68,21 +76,46 @@ export const addDocument = async (
 
 export const getDocuments = async <T,>(
   collectionName: string,
-  pageSize: number,
-  currentPage: number
+  pageSize: number = 10,
+  currentPage: number = 1,
+  fieldName: string = "",
+  selectedTags: string[] = []
 ): Promise<{ data: T[]; totalDocs: number }> => {
   try {
     const collectionRef = collection(db, collectionName);
 
-    const totalCountSnapshot = await getCountFromServer(collectionRef);
+    let countQuery;
+    if (selectedTags.length > 0) {
+      countQuery = query(
+        collectionRef,
+        where(fieldName, "array-contains-any", selectedTags)
+      );
+    } else {
+      countQuery = collectionRef;
+    }
+
+    const totalCountSnapshot = await getCountFromServer(countQuery);
     const totalDocs = totalCountSnapshot.data().count;
 
-    const docsQuery = query(collectionRef, limit(pageSize));
+    let docsQuery = query(collectionRef, limit(pageSize));
+
+    if (selectedTags.length > 0) {
+      docsQuery = query(
+        collectionRef,
+        where(fieldName, "array-contains-any", selectedTags),
+        limit(pageSize)
+      );
+    } else {
+      docsQuery = query(collectionRef, limit(pageSize));
+    }
 
     let querySnapshot;
     if (currentPage > 1) {
       const previousPageQuery = query(
         collectionRef,
+        ...(selectedTags.length > 0
+          ? [where(fieldName, "array-contains-any", selectedTags)]
+          : []),
         limit((currentPage - 1) * pageSize)
       );
       const previousPageSnapshot = await getDocs(previousPageQuery);
@@ -92,6 +125,9 @@ export const getDocuments = async <T,>(
       if (lastVisibleDoc) {
         const nextQuery = query(
           collectionRef,
+          ...(selectedTags.length > 0
+            ? [where(fieldName, "array-contains-any", selectedTags)]
+            : []),
           startAfter(lastVisibleDoc),
           limit(pageSize)
         );
@@ -111,6 +147,43 @@ export const getDocuments = async <T,>(
     return { data, totalDocs };
   } catch (e) {
     throw new Error("Error fetching documents");
+  }
+};
+
+export const getUniqueCategories = async (
+  collectionName: string
+): Promise<CategoryWithImage[]> => {
+  try {
+    const collectionRef = collection(db, collectionName);
+    const querySnapshot = await getDocs(collectionRef);
+
+    const categoryImagesMap: Map<string, string[]> = new Map();
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const categories = data["categories"] ?? [];
+      const imageUrl = data?.image ?? "";
+
+      categories.forEach((category: string) => {
+        if (!categoryImagesMap.has(category)) {
+          categoryImagesMap.set(category, []);
+        }
+        categoryImagesMap.get(category)?.push(imageUrl);
+      });
+    });
+
+    const categoriesWithImages: CategoryWithImage[] = Array.from(
+      categoryImagesMap,
+      ([name, imageUrls]) => {
+        const randomImageUrl =
+          imageUrls[Math.floor(Math.random() * imageUrls.length)];
+        return { name, imageUrl: randomImageUrl };
+      }
+    );
+
+    return categoriesWithImages;
+  } catch (e) {
+    throw new Error("Error fetching unique values from categories");
   }
 };
 
@@ -162,18 +235,5 @@ export const deleteDocument = async (collectionName: string, docId: string) => {
     console.log("Document deleted with ID: ", docId);
   } catch (e) {
     console.error("Error deleting document: ", e);
-  }
-};
-
-export const updateDocumentField = async (
-  collectionPath: string,
-  docId: string,
-  updatedFields: Record<string, FirestoreFieldValue>
-) => {
-  try {
-    const documentRef = doc(db, `${collectionPath}`, docId);
-    await updateDoc(documentRef, updatedFields);
-  } catch (error) {
-    throw new Error("Error updating document fields");
   }
 };

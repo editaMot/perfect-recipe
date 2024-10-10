@@ -12,6 +12,7 @@ interface RatingProps {
     e: SyntheticEvent<Element, Event>,
     value: number | null
   ) => void;
+  size?: "small" | "medium" | "large";
 }
 
 const Rating: React.FC<RatingProps> = ({
@@ -19,8 +20,10 @@ const Rating: React.FC<RatingProps> = ({
   recipeId,
   userRating = 0,
   ratingChangeHandler,
+  size = "small",
 }) => {
   const { ratedRecipe } = useRatedRecipe("recipeId", recipeId);
+
   const calculateAverageRating = (recipe: RatedRecipe[]): number => {
     if (!recipe || recipe.length === 0) return 0;
 
@@ -38,7 +41,7 @@ const Rating: React.FC<RatingProps> = ({
 
   return (
     <RatingStars
-      size="small"
+      size={size}
       readOnly={readOnly}
       defaultValue={0}
       value={readOnly ? averageRating : userRating}
