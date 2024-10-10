@@ -75,3 +75,15 @@ export interface Blog {
   summary: string;
   fullArticle: string;
 }
+
+export interface NewComment {
+  author: User;
+  createdAt: Timestamp;
+  text: string;
+  likedBy: string[];
+}
+
+export interface Comment extends NewComment {
+  id: string;
+  replies: Comment[];
+}
