@@ -5,7 +5,6 @@ import {
   doc,
   getCountFromServer,
   getDoc,
-  getDoc,
   getDocs,
   limit,
   query,
@@ -22,13 +21,8 @@ import {
   Comment,
 } from "../types/documentTypes";
 
-type DocumentData = Newsletter | BookmarkedRecipes | RecipeRating;
-
-export interface CategoryWithImage {
-  name: string;
-  imageUrl: string;
-}
 type DocumentData = Newsletter | BookmarkedRecipes | RecipeRating | NewComment;
+
 type FirestoreFieldValue =
   | string
   | number
@@ -235,5 +229,40 @@ export const deleteDocument = async (collectionName: string, docId: string) => {
     console.log("Document deleted with ID: ", docId);
   } catch (e) {
     console.error("Error deleting document: ", e);
+  }
+};
+
+export const getCommentsForRecipe = async (recipeId: string) => {
+  try {
+    const commentsRef = collection(db, `recipes/${recipeId}/comments`);
+    const commentsQuery = query(commentsRef);
+    const querySnapshot = await getDocs(commentsQuery);
+    const comments = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Comment[];
+
+    const commentsWithReplies = await Promise.all(
+      comments.map(async (comment) => {
+        const repliesRef = collection(
+          db,
+          `recipes/${recipeId}/comments/${comment.id}/replies`
+        );
+        const repliesQuery = query(repliesRef);
+        const repliesSnapshot = await getDocs(repliesQuery);
+        const replies = repliesSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Comment[];
+        return {
+          ...comment,
+          replies,
+        };
+      })
+    );
+
+    return commentsWithReplies;
+  } catch (e) {
+    throw new Error("Error fetching comments and replies");
   }
 };
