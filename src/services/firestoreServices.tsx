@@ -16,6 +16,7 @@ import {
   BookmarkedRecipes,
   Newsletter,
   RecipeRating,
+  Comment,
 } from "../types/documentTypes";
 
 type DocumentData = Newsletter | BookmarkedRecipes | RecipeRating;
@@ -200,5 +201,40 @@ export const deleteDocument = async (collectionName: string, docId: string) => {
     console.log("Document deleted with ID: ", docId);
   } catch (e) {
     console.error("Error deleting document: ", e);
+  }
+};
+
+export const getCommentsForRecipe = async (recipeId: string) => {
+  try {
+    const commentsRef = collection(db, `recipes/${recipeId}/comments`);
+    const commentsQuery = query(commentsRef);
+    const querySnapshot = await getDocs(commentsQuery);
+    const comments = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Comment[];
+
+    const commentsWithReplies = await Promise.all(
+      comments.map(async (comment) => {
+        const repliesRef = collection(
+          db,
+          `recipes/${recipeId}/comments/${comment.id}/replies`
+        );
+        const repliesQuery = query(repliesRef);
+        const repliesSnapshot = await getDocs(repliesQuery);
+        const replies = repliesSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Comment[];
+        return {
+          ...comment,
+          replies,
+        };
+      })
+    );
+
+    return commentsWithReplies;
+  } catch (e) {
+    throw new Error("Error fetching comments and replies");
   }
 };
