@@ -1,4 +1,6 @@
 import { Box, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { RoutePages } from "../routes/RoutePages";
 
 interface CategoryCardProps {
   categoryName: string;
@@ -9,6 +11,15 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
   categoryName,
   categoryImage,
 }) => {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = () => {
+    navigate({
+      pathname: RoutePages.Recipes,
+      search: `?category=${categoryName}`,
+    });
+  };
+
   return (
     <Box
       sx={{
@@ -17,7 +28,9 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
         gap: { xs: 1, sm: 2 },
         alignItems: "center",
         textAlign: "center",
+        cursor: "pointer",
       }}
+      onClick={handleCategoryClick}
     >
       <Box
         sx={{

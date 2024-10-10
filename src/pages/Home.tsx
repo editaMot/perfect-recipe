@@ -2,7 +2,8 @@ import BlogSection from "../components/BlogSection";
 import Hero from "../components/Hero/Hero";
 import NewsletterSection from "../components/NewsletterSection";
 import Partners from "../components/Partners";
-import RecipeSharingCard from "../components/Recipe/RecipeSharingCard";
+import PopularCategoriesSection from "../components/PopularCategoriesSection";
+import RecipeSharingCard from "../components/RecipeSharingCard";
 
 const Home: React.FC = () => {
   return (
@@ -11,6 +12,7 @@ const Home: React.FC = () => {
       <RecipeSharingCard />
       <BlogSection />
       <NewsletterSection />
+      <PopularCategoriesSection />
       <Partners />
     </>
   );
