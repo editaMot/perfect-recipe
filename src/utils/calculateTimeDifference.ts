@@ -1,5 +1,9 @@
 import { Timestamp } from "firebase/firestore";
 
+const SECONDS_IN_MINUTE = 60;
+const SECONDS_IN_HOUR = 3600;
+const SECONDS_IN_DAY = 86400;
+
 export const calculateTimeDifference = (timestamp: Timestamp): string => {
   const commentDate = timestamp.toDate();
   const now = new Date();
@@ -7,14 +11,12 @@ export const calculateTimeDifference = (timestamp: Timestamp): string => {
     (now.getTime() - commentDate.getTime()) / 1000
   );
 
-  const secondsInMinute = 60;
-  const secondsInHour = 3600;
-  const secondsInDay = 86400;
-
-  const days = Math.floor(diffInSeconds / secondsInDay);
-  const hours = Math.floor((diffInSeconds % secondsInDay) / secondsInHour);
-  const minutes = Math.floor((diffInSeconds % secondsInHour) / secondsInMinute);
-  const seconds = diffInSeconds % secondsInMinute;
+  const days = Math.floor(diffInSeconds / SECONDS_IN_DAY);
+  const hours = Math.floor((diffInSeconds % SECONDS_IN_DAY) / SECONDS_IN_HOUR);
+  const minutes = Math.floor(
+    (diffInSeconds % SECONDS_IN_HOUR) / SECONDS_IN_MINUTE
+  );
+  const seconds = diffInSeconds % SECONDS_IN_MINUTE;
 
   if (days > 0) {
     return `${days} day${days > 1 ? "s" : ""} ago`;

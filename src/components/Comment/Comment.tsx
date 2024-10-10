@@ -3,7 +3,7 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
 import { Avatar, Box, Button, Divider, Typography } from "@mui/material";
 import { Timestamp } from "firebase/firestore";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useAddReply } from "../../services/mutations/useAddReply";
@@ -35,7 +35,7 @@ const Comment: React.FC<CommentProps> = ({ comment, reply = false }) => {
   //change after implementinf authentication
   const userId = "UgmRjQ854xMU3ST8LiVv";
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = useCallback((data: FormValues) => {
     if (data.comment.length > 0 && recipeId && commentId) {
       const replyData: NewComment = {
         // will change after implementing authentication
@@ -52,7 +52,7 @@ const Comment: React.FC<CommentProps> = ({ comment, reply = false }) => {
     }
     reset();
     setOpenReply(false);
-  };
+  }, []);
 
   const toggleOpenReply = () => {
     setOpenReply((prev) => !prev);
@@ -143,7 +143,7 @@ const Comment: React.FC<CommentProps> = ({ comment, reply = false }) => {
               type="submit"
               sx={{ alignSelf: "flex-end" }}
             >
-              Reply
+              {isSubmitting ? "Submitting..." : "Reply"}
             </Button>
           </Box>
         )}
