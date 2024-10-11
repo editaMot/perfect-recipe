@@ -14,14 +14,14 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import {
-  BookmarkedRecipes,
+  BookmarkRecipe,
   NewComment,
   Newsletter,
   RecipeRating,
   Comment,
 } from "../types/documentTypes";
 
-type DocumentData = Newsletter | BookmarkedRecipes | RecipeRating | NewComment;
+type DocumentData = Newsletter | BookmarkRecipe | RecipeRating | NewComment;
 
 type FirestoreFieldValue =
   | string
@@ -70,7 +70,7 @@ export const addDocument = async (
 
 export const getDocuments = async <T,>(
   collectionName: string,
-  pageSize: number = 10,
+  pageSize: number | null = 10,
   currentPage: number = 1,
   fieldName: string = "",
   selectedTags: string[] = []
@@ -91,20 +91,23 @@ export const getDocuments = async <T,>(
     const totalCountSnapshot = await getCountFromServer(countQuery);
     const totalDocs = totalCountSnapshot.data().count;
 
-    let docsQuery = query(collectionRef, limit(pageSize));
-
-    if (selectedTags.length > 0) {
-      docsQuery = query(
-        collectionRef,
-        where(fieldName, "array-contains-any", selectedTags),
-        limit(pageSize)
-      );
+    let docsQuery;
+    if (pageSize) {
+      if (selectedTags.length > 0) {
+        docsQuery = query(
+          collectionRef,
+          where(fieldName, "array-contains-any", selectedTags),
+          limit(pageSize)
+        );
+      } else {
+        docsQuery = query(collectionRef, limit(pageSize));
+      }
     } else {
-      docsQuery = query(collectionRef, limit(pageSize));
+      docsQuery = query(collectionRef);
     }
 
     let querySnapshot;
-    if (currentPage > 1) {
+    if (currentPage > 1 && pageSize) {
       const previousPageQuery = query(
         collectionRef,
         ...(selectedTags.length > 0
@@ -139,7 +142,7 @@ export const getDocuments = async <T,>(
     }));
 
     return { data, totalDocs };
-  } catch (e) {
+  } catch {
     throw new Error("Error fetching documents");
   }
 };

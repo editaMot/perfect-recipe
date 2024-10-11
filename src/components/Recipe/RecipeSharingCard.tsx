@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import shareRecipe from "../assets/share-recipe.webp";
-import { RoutePages } from "../routes/RoutePages";
+import shareRecipe from "../../assets/share-recipe.webp";
+import { RoutePages } from "../../routes/RoutePages";
 
 const RecipeSharingCard: React.FC = () => {
   const navigate = useNavigate();
