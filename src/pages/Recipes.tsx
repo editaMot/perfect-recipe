@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { useSearchParams } from "react-router-dom";
 import Pagination from "../components/Pagination";
-import RecipeCard from "../components/RecipeCard";
+import RecipeCard from "../components/Recipe/RecipeCard";
 import { RECIPES_PAGE_SIZE } from "../constants/constants";
 import { useRecipes } from "../services/queries/useRecipes";
 

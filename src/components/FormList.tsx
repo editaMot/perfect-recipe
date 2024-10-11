@@ -5,32 +5,50 @@ import { Control, useFieldArray } from "react-hook-form";
 import { RecipeFormData } from "../types/recipeFormDataTypes";
 import FormInput from "./FormInput";
 
-interface IngredientsListProps {
+interface FormListProps {
   control: Control<RecipeFormData>;
+  fieldName: "instructions" | "ingredients";
+  title: string;
+  placeholder?: string;
 }
 
-const IngredientsList: React.FC<IngredientsListProps> = ({ control }) => {
+const FormList: React.FC<FormListProps> = ({
+  control,
+  fieldName,
+  title,
+  placeholder = "",
+}) => {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "ingredients",
+    name: fieldName,
   });
 
   return (
     <Box>
-      <Typography variant="h5">Ingredients:</Typography>
+      <Typography variant="h5">{title}:</Typography>
       {fields.map((field, index) => (
         <Box
           key={field.id}
           sx={{ display: "flex", alignItems: "center", mb: 2 }}
         >
+          {fieldName == "instructions" && (
+            <Box
+              sx={{
+                minWidth: "4rem",
+                fontWeight: "bold",
+                fontSize: { lg: "18px" },
+                mr: { md: 2 },
+              }}
+            >
+              Step {index + 1}
+            </Box>
+          )}
           <FormInput
-            name={`ingredients.${index}.value`}
+            name={`${fieldName}.${index}.value`}
             control={control}
-            defaultValue={field.value}
-            placeholder="Add ingredient"
-            rules={{
-              required: "Ingredient is required",
-            }}
+            defaultValue={field.value || ""}
+            placeholder={placeholder}
+            rules={{ required: `${title} is required` }}
           />
           {index !== 0 && (
             <IconButton
@@ -52,10 +70,10 @@ const IngredientsList: React.FC<IngredientsListProps> = ({ control }) => {
         onClick={() => append({ id: "", value: "" })}
         variant="text"
       >
-        Add Ingredient
+        Add {title}
       </Button>
     </Box>
   );
 };
 
-export default IngredientsList;
+export default FormList;

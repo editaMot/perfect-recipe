@@ -30,12 +30,20 @@ const NutritionInformation: React.FC<NutritionInformationProps> = ({
     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
       Nutrition Facts
     </Typography>
-    <List>
+    <List sx={{ p: 0 }}>
       {nutrientOrder.map((key, index) => {
         const value =
           nutritionInformation[key as keyof NutritionInformationTypes];
         return value !== undefined ? (
-          <ListItem key={index} divider disableGutters>
+          <ListItem
+            key={index}
+            divider
+            disableGutters
+            sx={{
+              pb: 0,
+              pt: 0.8,
+            }}
+          >
             <ListItemText primary={capitalizeText(key)} />
             <Typography>
               {value} {getNutrientUnit(key)}

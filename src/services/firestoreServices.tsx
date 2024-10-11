@@ -9,28 +9,62 @@ import {
   limit,
   query,
   startAfter,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import {
   BookmarkRecipe,
+  NewComment,
   Newsletter,
   RecipeRating,
+  Comment,
 } from "../types/documentTypes";
 
-type DocumentData = Newsletter | BookmarkRecipe | RecipeRating;
+type DocumentData = Newsletter | BookmarkRecipe | RecipeRating | NewComment;
+
+type FirestoreFieldValue =
+  | string
+  | number
+  | boolean
+  | Date
+  | null
+  | Array<unknown>
+  | Record<string, unknown>;
+
+export interface CategoryWithImage {
+  name: string;
+  imageUrl: string;
+}
 
 export const addDocument = async (
   collectionName: string,
-  data: DocumentData
+  data: DocumentData,
+  docPath?: string
 ): Promise<string> => {
   try {
-    const docRef = await addDoc(collection(db, collectionName), data);
+    let collectionRef;
+
+    if (docPath) {
+      const segments = docPath.split("/");
+
+      if (segments.length % 2 !== 0) {
+        throw new Error(
+          "Invalid document path: must have an even number of segments (alternating collection/document)."
+        );
+      }
+      const parentDocRef = doc(db, ...segments);
+      collectionRef = collection(parentDocRef, collectionName);
+    } else {
+      collectionRef = collection(db, collectionName);
+    }
+
+    const docRef = await addDoc(collectionRef, data);
     console.log("Document written with ID: ", docRef.id);
     return docRef.id;
-  } catch (e) {
-    console.error("Error adding document: ", e);
-    throw new Error("Error adding document");
+  } catch (error) {
+    console.error("Error adding document:", error);
+    throw new Error("Error adding document: " + error);
   }
 };
 
@@ -113,6 +147,43 @@ export const getDocuments = async <T,>(
   }
 };
 
+export const getUniqueCategories = async (
+  collectionName: string
+): Promise<CategoryWithImage[]> => {
+  try {
+    const collectionRef = collection(db, collectionName);
+    const querySnapshot = await getDocs(collectionRef);
+
+    const categoryImagesMap: Map<string, string[]> = new Map();
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const categories = data["categories"] ?? [];
+      const imageUrl = data?.image ?? "";
+
+      categories.forEach((category: string) => {
+        if (!categoryImagesMap.has(category)) {
+          categoryImagesMap.set(category, []);
+        }
+        categoryImagesMap.get(category)?.push(imageUrl);
+      });
+    });
+
+    const categoriesWithImages: CategoryWithImage[] = Array.from(
+      categoryImagesMap,
+      ([name, imageUrls]) => {
+        const randomImageUrl =
+          imageUrls[Math.floor(Math.random() * imageUrls.length)];
+        return { name, imageUrl: randomImageUrl };
+      }
+    );
+
+    return categoriesWithImages;
+  } catch (e) {
+    throw new Error("Error fetching unique values from categories");
+  }
+};
+
 export const getDocumentById = async <T,>(
   collectionName: string,
   documentId: string
@@ -161,5 +232,40 @@ export const deleteDocument = async (collectionName: string, docId: string) => {
     console.log("Document deleted with ID: ", docId);
   } catch (e) {
     console.error("Error deleting document: ", e);
+  }
+};
+
+export const getCommentsForRecipe = async (recipeId: string) => {
+  try {
+    const commentsRef = collection(db, `recipes/${recipeId}/comments`);
+    const commentsQuery = query(commentsRef);
+    const querySnapshot = await getDocs(commentsQuery);
+    const comments = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Comment[];
+
+    const commentsWithReplies = await Promise.all(
+      comments.map(async (comment) => {
+        const repliesRef = collection(
+          db,
+          `recipes/${recipeId}/comments/${comment.id}/replies`
+        );
+        const repliesQuery = query(repliesRef);
+        const repliesSnapshot = await getDocs(repliesQuery);
+        const replies = repliesSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Comment[];
+        return {
+          ...comment,
+          replies,
+        };
+      })
+    );
+
+    return commentsWithReplies;
+  } catch (e) {
+    throw new Error("Error fetching comments and replies");
   }
 };

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import BlogSection from "../components/BlogSection";
 import Hero from "../components/Hero/Hero";
 import NewsletterSection from "../components/NewsletterSection";
 import Partners from "../components/Partners";
+import PopularCategoriesSection from "../components/PopularCategoriesSection";
 import RecipeSharingCard from "../components/Recipe/RecipeSharingCard";
 import RecipesSection from "../components/Recipe/RecipesSection";
 import { useGetRandomRecipes } from "../hooks/useGetRandomRecipes";
@@ -70,6 +72,9 @@ const Home: React.FC = () => {
       <RecipesSection title="Trending Recipes" recipes={trendingRecipes} />
       <RecipesSection title="Explore Recipes" recipes={randomRecipes} />
       <NewsletterSection />
+      <BlogSection />
+      <NewsletterSection />
+      <PopularCategoriesSection />
       <Partners />
     </>
   );
