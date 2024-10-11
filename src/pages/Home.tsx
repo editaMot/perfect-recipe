@@ -10,7 +10,7 @@ import { useBookmarkedRecipes } from "../services/queries/useBookmarkedRecipes";
 import { Recipe } from "../types/documentTypes";
 import { getTrendingRecipesByBookmarks } from "../utils/getTrendingRecipesByBookmarks";
 
-const Home = () => {
+const Home: React.FC = () => {
   const DISPLAY_SIZE = 6;
 
   const {
@@ -26,35 +26,35 @@ const Home = () => {
   } = useBookmarkedRecipes();
   const [trendingRecipes, setTrendingRecipes] = useState<Recipe[]>([]);
 
+  const fetchTrendingRecipes = async () => {
+    try {
+      const trendingRecipeIds = getTrendingRecipesByBookmarks(
+        bookmarkedRecipes || []
+      );
+
+      const trendingRecipesData = await Promise.all(
+        trendingRecipeIds.map((recipeId) =>
+          getDocumentById<Recipe>("recipes", recipeId)
+        )
+      );
+
+      const validTrendingRecipes = trendingRecipesData.reduce<Recipe[]>(
+        (acc, recipe) => {
+          if (recipe !== null) {
+            acc.push(recipe);
+          }
+          return acc;
+        },
+        []
+      );
+
+      setTrendingRecipes(validTrendingRecipes);
+    } catch (e) {
+      console.error("Error fetching trending recipes");
+    }
+  };
+
   useEffect(() => {
-    const fetchTrendingRecipes = async () => {
-      try {
-        const trendingRecipeIds = getTrendingRecipesByBookmarks(
-          bookmarkedRecipes || []
-        );
-
-        const trendingRecipesData = await Promise.all(
-          trendingRecipeIds.map((recipeId) =>
-            getDocumentById<Recipe>("recipes", recipeId)
-          )
-        );
-
-        const validTrendingRecipes = trendingRecipesData.reduce<Recipe[]>(
-          (acc, recipe) => {
-            if (recipe !== null) {
-              acc.push(recipe);
-            }
-            return acc;
-          },
-          []
-        );
-
-        setTrendingRecipes(validTrendingRecipes);
-      } catch (e) {
-        console.error("Error fetching trending recipes");
-      }
-    };
-
     if (bookmarkedRecipes) {
       fetchTrendingRecipes();
     }
