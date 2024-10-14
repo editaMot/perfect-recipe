@@ -14,6 +14,18 @@ export interface Newsletter {
   email: string;
 }
 
+export interface NewComment {
+  author: User;
+  createdAt: Timestamp;
+  text: string;
+  likedBy: string[];
+}
+
+export interface Comment extends NewComment {
+  id: string;
+  replies: Comment[];
+}
+
 export interface RecipeRating {
   recipeId: string;
   rating: number;
@@ -42,14 +54,13 @@ export interface Time {
   minutes: number;
 }
 
-export interface Recipe {
-  id: string;
+export interface NewRecipe {
   title: string;
   author: User;
   categories: string[];
   cookTime: Time;
   preparationTime: Time;
-  createdAt: string;
+  createdAt: Date;
   cuisine: string;
   description: string;
   image: string;
@@ -57,6 +68,10 @@ export interface Recipe {
   instructions: string[];
   servings: number;
   nutritionInformation: NutritionInformation;
+}
+
+export interface Recipe extends NewRecipe {
+  id: string;
 }
 
 export type nutrientsType =
