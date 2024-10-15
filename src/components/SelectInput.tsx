@@ -1,21 +1,25 @@
 import {
-  Box,
   FormControl,
   FormHelperText,
   InputLabel,
   MenuItem,
   Select,
 } from "@mui/material";
-import { Control, Controller, FieldValues } from "react-hook-form";
+import { Control, Controller } from "react-hook-form";
+import {
+  RecipeFormData,
+  RecipeFormFieldNames,
+} from "../types/recipeFormDataTypes";
 import { ValidationRules } from "../types/recipeFormValidationRulesTypes";
 
 interface SelectInputProps {
-  control: Control<FieldValues>;
-  name: string;
+  control: Control<RecipeFormData>;
+  name: RecipeFormFieldNames;
   label: string;
   options: string[];
-  defaultValue?: string;
-  rules?: ValidationRules;
+  defaultValue?: string | string[];
+  rules: ValidationRules;
+  multipleSelect?: boolean;
 }
 
 const SelectInput: React.FC<SelectInputProps> = ({
@@ -25,39 +29,42 @@ const SelectInput: React.FC<SelectInputProps> = ({
   options,
   defaultValue = "",
   rules,
-}) => {
-  return (
-    <Box>
-      <FormControl fullWidth>
+  multipleSelect = false,
+}) => (
+  <Controller
+    name={name}
+    control={control}
+    defaultValue={defaultValue}
+    rules={rules}
+    render={({ field, fieldState: { error } }) => (
+      <FormControl fullWidth error={!!error}>
         <InputLabel id={`${name}-label`}>{label}</InputLabel>
-        <Controller
-          name={name}
-          control={control}
-          defaultValue={defaultValue}
-          rules={rules}
-          render={({ field, fieldState: { error } }) => (
-            <Select
-              {...field}
-              labelId={`${name}-label`}
-              label={label}
-              value={field.value || ""}
-              onChange={(e) => field.onChange(e.target.value)}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {options.map((option) => (
-                <MenuItem value={option} key={option}>
-                  {option}
-                </MenuItem>
-              ))}
-              {error && <FormHelperText>{error.message}</FormHelperText>}
-            </Select>
+        <Select
+          {...field}
+          labelId={`${name}-label`}
+          label={label}
+          multiple={multipleSelect}
+          value={field.value || (multipleSelect ? [] : "")}
+          onChange={(e) => {
+            const value = multipleSelect ? e.target.value : e.target.value;
+            field.onChange(value);
+          }}
+        >
+          {!multipleSelect && (
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
           )}
-        />
+          {options.map((option) => (
+            <MenuItem value={option} key={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </Select>
+        {error && <FormHelperText>{error.message}</FormHelperText>}
       </FormControl>
-    </Box>
-  );
-};
+    )}
+  />
+);
 
 export default SelectInput;
