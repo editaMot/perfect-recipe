@@ -12,9 +12,14 @@ const HelperText: React.FC<HelperTextProps> = ({
   additionalInfo,
 }) => (
   <>
-    {error ? error.message : ""}
-    {maxLength && !error && ` ${inputLength}/${maxLength}`}
-    {additionalInfo && !error ? additionalInfo : ""}
+    {error ? (
+      <>{error.message}</>
+    ) : (
+      <>
+        {maxLength && `${inputLength}/${maxLength}`}
+        {additionalInfo && ` ${additionalInfo}`}
+      </>
+    )}
   </>
 );
 
