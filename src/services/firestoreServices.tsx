@@ -15,6 +15,7 @@ import {
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { db } from "../firebaseConfig";
 import {
+  NewRecipe,
   BookmarkRecipe,
   NewComment,
   Newsletter,
@@ -22,7 +23,12 @@ import {
   Comment,
 } from "../types/documentTypes";
 
-type DocumentData = Newsletter | BookmarkRecipe | RecipeRating | NewComment;
+type DocumentData =
+  | Newsletter
+  | BookmarkRecipe
+  | RecipeRating
+  | NewComment
+  | NewRecipe;
 
 type FirestoreFieldValue =
   | string
