@@ -71,7 +71,6 @@ const Home: React.FC = () => {
       <RecipeSharingCard />
       <RecipesSection title="Trending Recipes" recipes={trendingRecipes} />
       <RecipesSection title="Explore Recipes" recipes={randomRecipes} />
-      <NewsletterSection />
       <BlogSection />
       <NewsletterSection />
       <PopularCategoriesSection />
