@@ -19,7 +19,7 @@ const List: React.FC<ListProps> = ({ list, title, icon = false }) => (
     <Typography variant="h5" sx={{ fontWeight: "bold" }}>
       {title}
     </Typography>
-    <ListMUI disablePadding>
+    <ListMUI disablePadding sx={{ mb: 3 }}>
       {list.map((item, index) => (
         <ListItem key={item} disableGutters sx={{ pb: 0 }}>
           <ListItemIcon sx={{ minWidth: "2rem" }}>

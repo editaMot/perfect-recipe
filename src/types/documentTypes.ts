@@ -1,13 +1,29 @@
 import { Timestamp } from "firebase/firestore";
 import { User } from "./UserTypes";
 
-export interface BookmarkedRecipes {
+export interface BookmarkRecipe {
   userId: string;
   recipeId: string;
 }
 
+export interface BookmarkedRecipe extends BookmarkRecipe {
+  id: string;
+}
+
 export interface Newsletter {
   email: string;
+}
+
+export interface NewComment {
+  author: User;
+  createdAt: Timestamp;
+  text: string;
+  likedBy: string[];
+}
+
+export interface Comment extends NewComment {
+  id: string;
+  replies: Comment[];
 }
 
 export interface RecipeRating {
@@ -38,14 +54,13 @@ export interface Time {
   minutes: number;
 }
 
-export interface Recipe {
-  id: string;
+export interface NewRecipe {
   title: string;
   author: User;
   categories: string[];
   cookTime: Time;
   preparationTime: Time;
-  createdAt: string;
+  createdAt: Date;
   cuisine: string;
   description: string;
   image: string;
@@ -53,6 +68,10 @@ export interface Recipe {
   instructions: string[];
   servings: number;
   nutritionInformation: NutritionInformation;
+}
+
+export interface Recipe extends NewRecipe {
+  id: string;
 }
 
 export type nutrientsType =
@@ -74,4 +93,16 @@ export interface Blog {
   createdAt: Timestamp;
   summary: string;
   fullArticle: string;
+}
+
+export interface NewComment {
+  author: User;
+  createdAt: Timestamp;
+  text: string;
+  likedBy: string[];
+}
+
+export interface Comment extends NewComment {
+  id: string;
+  replies: Comment[];
 }
