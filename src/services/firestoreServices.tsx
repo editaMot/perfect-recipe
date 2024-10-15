@@ -286,3 +286,16 @@ export const getCommentsForRecipe = async (recipeId: string) => {
     throw new Error("Error fetching comments and replies");
   }
 };
+
+export const updateDocumentField = async (
+  collectionPath: string,
+  docId: string,
+  updatedFields: Record<string, FirestoreFieldValue>
+) => {
+  try {
+    const documentRef = doc(db, `${collectionPath}`, docId);
+    await updateDoc(documentRef, updatedFields);
+  } catch (error) {
+    throw new Error("Error updating document fields");
+  }
+};
